@@ -14,3 +14,7 @@ X0_MAX = 1.0
 
 V0_MIN = -2.0
 V0_MAX = 2.0
+
+SEED = 42
+
+DATA_PATH = "data/simulations.npz"
