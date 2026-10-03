@@ -1,5 +1,3 @@
-from operator import index
-
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, TensorDataset
@@ -7,7 +5,16 @@ from torch.utils.data import DataLoader, TensorDataset
 from CONSTANTS import SEED
 
 
-def loader():
+def loader() -> tuple[
+    DataLoader[tuple[torch.Tensor, ...]],
+    DataLoader[tuple[torch.Tensor, ...]],
+    DataLoader[tuple[torch.Tensor, ...]],
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+    torch.device,
+]:
     if torch.cuda.is_available():
         device = torch.device("cuda")
     elif torch.backends.mps.is_available():
@@ -52,4 +59,13 @@ def loader():
     val_loader = DataLoader(val_dataset, batch_size=256, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=256, shuffle=False)
 
-    return train_loader, val_loader, test_loader, mean_entry, std_entry, mean_x, std_x
+    return (
+        train_loader,
+        val_loader,
+        test_loader,
+        mean_entry,
+        std_entry,
+        mean_x,
+        std_x,
+        device,
+    )
