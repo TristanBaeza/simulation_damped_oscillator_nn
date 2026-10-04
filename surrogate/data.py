@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-from CONSTANTS import SEED
+from CONSTANTS import BATCH_SIZE, SEED
 
 
 def loader() -> tuple[
@@ -55,7 +55,7 @@ def loader() -> tuple[
     val_dataset = TensorDataset(entry[index_val], x[index_val])
     test_dataset = TensorDataset(entry[index_test], x[index_test])
 
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, generator=gen)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, generator=gen)
     val_loader = DataLoader(val_dataset, batch_size=256, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=256, shuffle=False)
 

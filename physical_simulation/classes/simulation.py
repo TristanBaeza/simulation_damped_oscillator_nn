@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 
 import numpy as np
@@ -89,5 +90,7 @@ class Simulation:
 
 
 if __name__ == "__main__":
+    start = time.perf_counter()
     Simulation().save()
-    print(f"Simulations sauvegardées dans {DATA_PATH}")
+    elapsed = time.perf_counter() - start
+    print(f"Simulations sauvegardées dans {DATA_PATH} en {elapsed:.1f} s")

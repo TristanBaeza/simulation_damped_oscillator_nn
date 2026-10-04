@@ -1,6 +1,6 @@
 INIT_TIME = 0.0
-END_TIME = 100.0
-N_POINTS = 5000
+END_TIME = 20
+N_POINTS = 1000
 N_SIMULATIONS = 1000
 
 KSI_MIN = 0.02
@@ -18,3 +18,5 @@ V0_MAX = 2.0
 SEED = 42
 
 DATA_PATH = "data/simulations.npz"
+
+BATCH_SIZE = 32
