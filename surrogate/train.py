@@ -1,4 +1,5 @@
 from torch import nn
+import torch
 
 
 def train_loop(dataloader, model, optimizer, device, loss_fn=nn.MSELoss()):
@@ -11,7 +12,7 @@ def train_loop(dataloader, model, optimizer, device, loss_fn=nn.MSELoss()):
         y = y.to(device)
         pred = model(X)
         loss = loss_fn(pred, y)
-        total_loss += loss.item()
+        total_loss += loss.item() * len(X)
 
         loss.backward()
         optimizer.step()
@@ -20,4 +21,18 @@ def train_loop(dataloader, model, optimizer, device, loss_fn=nn.MSELoss()):
         if batch % 5 == 0:
             current_loss, current = loss.item(), batch * batch_size + len(X)
             print(f"loss: {current_loss:>7f}  [{current:>5d}/{size:>5d}]")
-    return total_loss / batch
+    return total_loss / size
+
+
+def test_loop(dataloader, model, device, loss_fn=nn.MSELoss()):
+    model.eval()
+    size = len(dataloader.dataset)
+    total_loss = 0
+    with torch.no_grad():
+        for X, y in dataloader:
+            X = X.to(device)
+            y = y.to(device)
+            pred = model(X)
+            loss = loss_fn(pred, y)
+            total_loss += loss.item() * len(X)
+    return total_loss / size

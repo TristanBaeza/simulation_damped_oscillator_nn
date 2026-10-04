@@ -20,3 +20,7 @@ SEED = 42
 DATA_PATH = "data/simulations.npz"
 
 BATCH_SIZE = 32
+
+N_EPOCHS = 500
+
+N_PATIENCE = 20
