@@ -78,12 +78,24 @@ def run_simulations(
     ksi_list: np.ndarray,
     omega0_list: np.ndarray,
     t_eval: np.ndarray,
+    verbose: bool = False,
 ) -> np.ndarray:
-    x = np.empty((len(x0_list), len(t_eval)))
-    for i in range(len(x0_list)):
+    n = len(x0_list)
+    x = np.empty((n, len(t_eval)))
+    step = max(1, n // 20)  # progress every 5%
+    start = time.perf_counter()
+    for i in range(n):
         x[i] = solve_oscillator(
             x0_list[i], v0_list[i], ksi_list[i], omega0_list[i], t_eval
         )
+        if verbose and ((i + 1) % step == 0 or i + 1 == n):
+            elapsed = time.perf_counter() - start
+            remaining = elapsed / (i + 1) * (n - i - 1)
+            print(
+                f"{i + 1:>{len(str(n))}d}/{n} simulations ({(i + 1) / n:.0%}) "
+                f"| {elapsed:.1f} s écoulées | ~{remaining:.1f} s restantes",
+                flush=True,
+            )
     return x
 
 
@@ -92,7 +104,9 @@ def generate_dataset(
 ) -> np.ndarray:
     t_eval = time_grid()
     x0_list, v0_list, ksi_list, omega0_list = sample_parameters(n_simulations, seed)
-    x = run_simulations(x0_list, v0_list, ksi_list, omega0_list, t_eval)
+    x = run_simulations(
+        x0_list, v0_list, ksi_list, omega0_list, t_eval, verbose=True
+    )
     file_path = Path(path)
     file_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(

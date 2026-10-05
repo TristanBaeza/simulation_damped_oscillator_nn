@@ -11,12 +11,12 @@ def train_loop(dataloader, model, optimizer, device, loss_fn=nn.MSELoss()):
         y = y.to(device)
         pred = model(X)
         loss = loss_fn(pred, y)
-        total_loss += loss.item() * len(X)  # weighted: the last batch can be smaller
+        total_loss += loss.detach() * len(X)  # weighted: the last batch can be smaller
 
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
-    return total_loss / size
+    return total_loss.item() / size  # single GPU -> CPU sync per epoch
 
 
 def test_loop(dataloader, model, device, loss_fn=nn.MSELoss()):
@@ -25,9 +25,7 @@ def test_loop(dataloader, model, device, loss_fn=nn.MSELoss()):
     total_loss = 0
     with torch.no_grad():
         for X, y in dataloader:
-            X = X.to(device)
-            y = y.to(device)
             pred = model(X)
             loss = loss_fn(pred, y)
-            total_loss += loss.item() * len(X)
-    return total_loss / size
+            total_loss += loss * len(X)
+    return total_loss.item() / size

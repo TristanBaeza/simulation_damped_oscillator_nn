@@ -58,8 +58,8 @@ def test_no_nan(loaded):
 
 def test_train_inputs_are_standardized(loaded):
     X, _ = tensors(loaded[0])
-    torch.testing.assert_close(X.mean(dim=0), torch.zeros(4), atol=1e-5, rtol=0)
-    torch.testing.assert_close(X.std(dim=0), torch.ones(4), atol=1e-5, rtol=0)
+    torch.testing.assert_close(X.mean(dim=0), torch.zeros(4, device=X.device), atol=1e-5, rtol=0)
+    torch.testing.assert_close(X.std(dim=0), torch.ones(4, device=X.device), atol=1e-5, rtol=0)
 
 
 def test_train_outputs_are_standardized(loaded):

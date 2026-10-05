@@ -45,12 +45,12 @@ def loader() -> tuple[
     mean_entry = entry[index_train].mean(dim=0)  # train stats only, to avoid leakage
     std_entry = entry[index_train].std(dim=0)
 
-    entry = (entry - mean_entry) / std_entry
+    entry = ((entry - mean_entry) / std_entry).to(device)
 
     mean_x = x[index_train].mean()  # global: per-step std is ~0 at the end of curves
     std_x = x[index_train].std()
 
-    x = (x - mean_x) / std_x
+    x = ((x - mean_x) / std_x).to(device)
 
     train_dataset = TensorDataset(entry[index_train], x[index_train])
     val_dataset = TensorDataset(entry[index_val], x[index_val])
