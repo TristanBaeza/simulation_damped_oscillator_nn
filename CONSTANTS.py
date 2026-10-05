@@ -21,6 +21,8 @@ DATA_PATH = "data/simulations.npz"
 
 BATCH_SIZE = 32
 
+HIDDEN = (128, 128, 128)
+
 N_EPOCHS = 500
 
 PATIENCE_MAX = 20
