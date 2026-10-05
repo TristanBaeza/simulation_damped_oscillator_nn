@@ -14,6 +14,7 @@ def loader() -> tuple[
     torch.Tensor,
     torch.Tensor,
     torch.device,
+    torch.Tensor,
 ]:
     if torch.cuda.is_available():
         device = torch.device("cuda")
@@ -38,15 +39,15 @@ def loader() -> tuple[
     index_val = perm[n_train : n_train + n_val]
     index_test = perm[n_train + n_val :]
 
-    entry[:, 2] = torch.log10(entry[:, 2])
+    entry[:, 2] = torch.log10(entry[:, 2])  # ksi and omega0 were sampled in log scale
     entry[:, 3] = torch.log10(entry[:, 3])
 
-    mean_entry = entry[index_train].mean(dim=0)
+    mean_entry = entry[index_train].mean(dim=0)  # train stats only, to avoid leakage
     std_entry = entry[index_train].std(dim=0)
 
     entry = (entry - mean_entry) / std_entry
 
-    mean_x = x[index_train].mean()
+    mean_x = x[index_train].mean()  # global: per-step std is ~0 at the end of curves
     std_x = x[index_train].std()
 
     x = (x - mean_x) / std_x
@@ -55,7 +56,9 @@ def loader() -> tuple[
     val_dataset = TensorDataset(entry[index_val], x[index_val])
     test_dataset = TensorDataset(entry[index_test], x[index_test])
 
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, generator=gen)
+    train_loader = DataLoader(
+        train_dataset, batch_size=BATCH_SIZE, shuffle=True, generator=gen
+    )
     val_loader = DataLoader(val_dataset, batch_size=256, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=256, shuffle=False)
 
@@ -68,4 +71,5 @@ def loader() -> tuple[
         mean_x,
         std_x,
         device,
+        t,
     )

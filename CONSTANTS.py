@@ -26,3 +26,5 @@ HIDDEN = (128, 128, 128)
 N_EPOCHS = 500
 
 PATIENCE_MAX = 20
+
+MODEL_PATH = "models/mlp_128x3_bs32.pt"

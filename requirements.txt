@@ -1,6 +1,7 @@
 numpy>=2.5
 scipy>=1.18
 torch>=2.14
+matplotlib>=3.11
 
 # Tests
 pytest>=9.1

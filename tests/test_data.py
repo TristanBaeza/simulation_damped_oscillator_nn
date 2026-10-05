@@ -34,7 +34,7 @@ def test_split_sizes(loaded):
 
 
 def test_splits_are_disjoint(loaded):
-    # x0 vient d'un linspace : chaque simulation a une valeur unique
+    # x0 comes from a linspace: one unique value per simulation
     x0 = [tensors(dl)[0][:, 0] for dl in loaded[:3]]
     assert not torch.isin(x0[0], x0[1]).any()
     assert not torch.isin(x0[0], x0[2]).any()
@@ -69,9 +69,10 @@ def test_train_outputs_are_standardized(loaded):
 
 
 def test_normalization_stats_shapes(loaded):
-    _, _, _, mean_entry, std_entry, mean_x, std_x, _ = loaded
+    _, _, _, mean_entry, std_entry, mean_x, std_x, _, t = loaded
     assert mean_entry.shape == std_entry.shape == (4,)
     assert mean_x.shape == std_x.shape == ()
+    assert t.shape == (tensors(loaded[0])[1].shape[1],)
 
 
 def test_loader_is_reproducible(at_root, loaded):

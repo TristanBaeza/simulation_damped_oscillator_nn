@@ -23,10 +23,9 @@ def test_model_file_name(monkeypatch, hidden, expected):
 @requires_data
 def test_main_saves_loadable_checkpoint(at_root, tmp_path, monkeypatch):
     path = tmp_path / "models" / "test.pt"
-    monkeypatch.setattr(main_module, "N_EPOCHS", 2)
     monkeypatch.setattr(main_module, "model_file_name", lambda: str(path))
 
-    main_module.main()
+    main_module.main(n_epochs=2)
 
     checkpoint = torch.load(path)
     assert len(checkpoint["loss_list_train"]) == 2
@@ -35,3 +34,4 @@ def test_main_saves_loadable_checkpoint(at_root, tmp_path, monkeypatch):
         checkpoint["dimension_in"], checkpoint["dimension_out"], checkpoint["HIDDEN"]
     )
     model.load_state_dict(checkpoint["best_model"])
+    assert checkpoint["t"].shape == (checkpoint["dimension_out"],)

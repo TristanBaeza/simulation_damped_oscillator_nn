@@ -11,7 +11,7 @@ def train_loop(dataloader, model, optimizer, device, loss_fn=nn.MSELoss()):
         y = y.to(device)
         pred = model(X)
         loss = loss_fn(pred, y)
-        total_loss += loss.item() * len(X)
+        total_loss += loss.item() * len(X)  # weighted: the last batch can be smaller
 
         loss.backward()
         optimizer.step()
